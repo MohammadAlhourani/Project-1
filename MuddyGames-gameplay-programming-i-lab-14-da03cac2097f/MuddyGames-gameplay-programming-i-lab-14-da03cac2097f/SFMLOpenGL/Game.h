@@ -20,9 +20,13 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
+#include <GameObject.h>
+
 using namespace std;
 using namespace sf;
 using namespace glm;
+
+const int m_maxCube{ 2 };
 
 class Game
 {
@@ -32,6 +36,10 @@ public:
 	~Game();
 	void run();
 private:
+	
+	int m_player{ 0 };
+
+	GameObject* game_object[m_maxCube];
 	RenderWindow window;
 	Clock clock;
 	Time time;
@@ -43,6 +51,8 @@ private:
 	void update();
 	void render();
 	void unload();
+
+	void jump();
 };
 
 #endif  // ! GAME_H
