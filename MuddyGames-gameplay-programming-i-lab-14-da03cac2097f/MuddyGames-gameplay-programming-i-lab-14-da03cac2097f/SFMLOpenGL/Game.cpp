@@ -62,10 +62,10 @@ Game::Game(sf::ContextSettings settings) :
 	settings)
 {
 	game_object[0] = new GameObject();
-	game_object[0]->setPosition(vec3(0.5f, 0.5f, 0.0f));
+	game_object[0]->setPosition(vec3(0.0f, 0.0f, 0.0f));
 
 	game_object[1] = new GameObject();
-	game_object[1]->setPosition(vec3(0.8f, 0.8f, -6.0f));
+	game_object[1]->setPosition(vec3(0.0f, 0.0f, -10.0f));
 
 	initialize();
 }
@@ -193,6 +193,16 @@ void Game::run()
 		update();
 		render();
 		jump();
+
+		//models[1] = glm::translate(models[1], glm::vec3(0, 0, 0.1));
+		game_object[1]->setPosition(game_object[1]->getPosition() + glm::vec3(0, 0, 0.01));
+
+		if (game_object[1]->getPosition().z > 11)
+		{
+			game_object[1]->setPosition(glm::vec3(0, 0, -15));
+		}
+
+
 	}
 
 #if (DEBUG >= 2)
@@ -379,7 +389,7 @@ void Game::initialize()
 
 		// Camera Matrix
 		view = lookAt(
-			vec3(0.0f, 4.0f, 10.0f),	// Camera (x,y,z), in World Space
+			vec3(10.0f, 5.0f, 10.0f),	// Camera (x,y,z), in World Space
 			vec3(0.0f, 0.0f, 0.0f),		// Camera looking at origin
 			vec3(0.0f, 1.0f, 0.0f)		// 0.0f, 1.0f, 0.0f Look Down and 0.0f, -1.0f, 0.0f Look Up
 		);
@@ -411,6 +421,8 @@ void Game::update()
 	{
 		mvp[i] = projection * view * models[i];
 	}
+
+	collision();
 }
 
 void Game::render()
@@ -562,15 +574,41 @@ void Game::unload()
 void Game::jump()
 {
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && allowJump == false && game_object[m_player]->getPosition().y <= 0)
 		{
-			models[m_player] = glm::translate(models[m_player], glm::vec3(0, 1, 0));
-			game_object[m_player]->setPosition(glm::vec3(game_object[m_player]->getPosition().x, game_object[m_player]->getPosition().y + 0.5, game_object[m_player]->getPosition().z));
+
+			allowJump = true;
+			
 		}
-		else if (game_object[m_player]->getPosition().y > 0)
+
+		if (allowJump)
 		{
-			models[m_player] = glm::translate(models[m_player], glm::vec3(0, -1, 0));
-			game_object[m_player]->setPosition(glm::vec3(game_object[m_player]->getPosition().x, game_object[m_player]->getPosition().y - 0.5, game_object[m_player]->getPosition().z));
+		//	models[m_player] = glm::translate(models[m_player], glm::vec3(0, 0.01, 0));
+			game_object[m_player]->setPosition(glm::vec3(game_object[m_player]->getPosition().x, game_object[m_player]->getPosition().y + 0.01, game_object[m_player]->getPosition().z));
+
+			if (game_object[m_player]->getPosition().y > 5)
+			{
+				allowJump = false;
+			}
 		}
+
+		if ( !allowJump && game_object[m_player]->getPosition().y >= 0 )
+		{
+			//models[m_player] = glm::translate(models[m_player], glm::vec3(0, -0.01, 0));
+			game_object[m_player]->setPosition(glm::vec3(game_object[m_player]->getPosition().x, game_object[m_player]->getPosition().y - 0.01, game_object[m_player]->getPosition().z));
+		}
+}
+
+void Game::collision()
+{
+	for (int i = 1; i < m_maxCube; i++)
+	{
+		if (game_object[m_player]->getPosition().z - 2 < game_object[i]->getPosition().z)
+		{
+			std::cout << "true collide" << std::endl;
+		}
+	}
+
+	
 }
 

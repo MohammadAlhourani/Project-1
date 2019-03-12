@@ -44,6 +44,7 @@ private:
 	Clock clock;
 	Time time;
 	bool animate = false;
+	bool allowJump = false;
 	vec3 animation = vec3(0.0f);
 	float rotation = 0.0f;
 	bool isRunning = false;
@@ -53,6 +54,8 @@ private:
 	void unload();
 
 	void jump();
+
+	void collision();
 };
 
 #endif  // ! GAME_H
