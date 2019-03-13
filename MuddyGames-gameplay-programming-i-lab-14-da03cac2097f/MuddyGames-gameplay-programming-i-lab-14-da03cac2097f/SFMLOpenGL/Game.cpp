@@ -91,118 +91,147 @@ void Game::run()
 #if (DEBUG >= 2)
 		DEBUG_MSG("Game running...");
 #endif
-		while (window.pollEvent(event))
+		while (window.pollEvent(event) && gameOver == false)
 		{
 			if (event.type == Event::Closed)
 			{
 				isRunning = false;
 			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-			{
-				// Set Model Rotation
-				if (!animate)
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
 				{
-					animate = true;
-					if (rotation < 0)
-						rotation *= -1; // Set Positive
-					animation = glm::vec3(0, 2, 0); //Rotate Y
-				}
-			}
-
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-			{
-				// Set Model Rotation
-				if (!animate)
-				{
-					animate = true;
-					if (rotation >= 0)
-						rotation *= -1; // Set Negative
-					animation = glm::vec3(0, -2, 0); //Rotate Y
+					// Set Model Rotation
+					if (!animate)
+					{
+						animate = true;
+						if (rotation < 0)
+							rotation *= -1; // Set Positive
+						animation = glm::vec3(0, 2, 0); //Rotate Y
+					}
 				}
 
-				// https://www.sfml-dev.org/documentation/2.0/classsf_1_1Clock.php
-				// https://github.com/acron0/Easings
-				// http://robotacid.com/documents/code/Easing.cs
-				// http://st33d.tumblr.com/post/94243475686/easing-equations-for-unity-c
-				// http://easings.net/
-				// http://upshots.org/actionscript/jsas-understanding-easing
-				// https://www.kirupa.com/html5/animating_with_easing_functions_in_javascript.htm
-				// https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3#.svh4gczav
-				// http://thednp.github.io/kute.js/easing.html
-				// http://gizma.com/easing/#quad1
-				// https://github.com/warrenm/AHEasing
-
-				// VR
-				// https://www.sfml-dev.org/documentation/2.4.2/classsf_1_1Sensor.php
-				// http://en.sfml-dev.org/forums/index.php?topic=9412.msg65594
-				// https://github.com/SFML/SFML/wiki/Tutorial:-Building-SFML-for-Android-on-Windows
-				// https://github.com/SFML/SFML/wiki/Tutorial:-Building-SFML-for-Android
-				// https://www.youtube.com/watch?v=n_JSi6ihDFs
-				// http://en.sfml-dev.org/forums/index.php?topic=8010.0
-				// 
-
-				/*
-				// Set Model Rotation
-				// t = time, b = startvalue, c = change in value, d = duration:
-
-				time = clock.getElapsedTime();
-				std::cout << time.asSeconds() << std::endl;
-				float original = 0.001f;
-				float destination = 0.05f;
-
-				float factor, temp;
-
-				for (int t = 0; t < 5.0f; t++)
+				else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
 				{
-				factor = gpp::Easing::easeIn(t, original, 0.00001f, 5.0f);
-				cout << "Factor : " << factor << endl;
+					// Set Model Rotation
+					if (!animate)
+					{
+						animate = true;
+						if (rotation >= 0)
+							rotation *= -1; // Set Negative
+						animation = glm::vec3(0, -2, 0); //Rotate Y
+					}
+
+					// https://www.sfml-dev.org/documentation/2.0/classsf_1_1Clock.php
+					// https://github.com/acron0/Easings
+					// http://robotacid.com/documents/code/Easing.cs
+					// http://st33d.tumblr.com/post/94243475686/easing-equations-for-unity-c
+					// http://easings.net/
+					// http://upshots.org/actionscript/jsas-understanding-easing
+					// https://www.kirupa.com/html5/animating_with_easing_functions_in_javascript.htm
+					// https://medium.com/motion-in-interaction/animation-principles-in-ui-design-understanding-easing-bea05243fe3#.svh4gczav
+					// http://thednp.github.io/kute.js/easing.html
+					// http://gizma.com/easing/#quad1
+					// https://github.com/warrenm/AHEasing
+
+					// VR
+					// https://www.sfml-dev.org/documentation/2.4.2/classsf_1_1Sensor.php
+					// http://en.sfml-dev.org/forums/index.php?topic=9412.msg65594
+					// https://github.com/SFML/SFML/wiki/Tutorial:-Building-SFML-for-Android-on-Windows
+					// https://github.com/SFML/SFML/wiki/Tutorial:-Building-SFML-for-Android
+					// https://www.youtube.com/watch?v=n_JSi6ihDFs
+					// http://en.sfml-dev.org/forums/index.php?topic=8010.0
+					// 
+
+					/*
+					// Set Model Rotation
+					// t = time, b = startvalue, c = change in value, d = duration:
+
+					time = clock.getElapsedTime();
+					std::cout << time.asSeconds() << std::endl;
+					float original = 0.001f;
+					float destination = 0.05f;
+
+					float factor, temp;
+
+					for (int t = 0; t < 5.0f; t++)
+					{
+					factor = gpp::Easing::easeIn(t, original, 0.00001f, 5.0f);
+					cout << "Factor : " << factor << endl;
+					}
+
+
+					factor = gpp::Easing::easeIn(time.asMilliseconds(), original, 0.00001f, 5.0f);
+					cout << "Factor : " << factor << endl;
+					temp = original + ((destination - original) * factor);
+					cout << "Temp : " << factor << endl;
+					model = rotate(model, temp, glm::vec3(0, 1, 0)); // Rotate
+					*/
 				}
 
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+				{
+					// Set Model Rotation
+					//models[m_player] = rotate(models[m_player], -0.01f, glm::vec3(1, 0, 0)); // Rotate
 
-				factor = gpp::Easing::easeIn(time.asMilliseconds(), original, 0.00001f, 5.0f);
-				cout << "Factor : " << factor << endl;
-				temp = original + ((destination - original) * factor);
-				cout << "Temp : " << factor << endl;
-				model = rotate(model, temp, glm::vec3(0, 1, 0)); // Rotate
-				*/
-			}
+					models[m_player] = glm::translate(models[m_player], glm::vec3(0, 0, -0.1));
+				}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-			{
-				// Set Model Rotation
-				//models[m_player] = rotate(models[m_player], -0.01f, glm::vec3(1, 0, 0)); // Rotate
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+				{
+					// Set Model Rotation
+					models[m_player] = rotate(models[m_player], 0.01f, glm::vec3(1, 0, 0)); // Rotate
+				}
 
-				models[m_player] = glm::translate(models[m_player], glm::vec3(0, 0, -0.1));
-			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-			{
-				// Set Model Rotation
-				models[m_player] = rotate(models[m_player], 0.01f, glm::vec3(1, 0, 0)); // Rotate
-			}
-
-			if (animate)
-			{
-				rotation += (1.0f * rotation) + 0.05f;
-				models[m_player] = rotate(models[m_player], 0.01f, animation); // Rotate
-				rotation = 0.0f;
-				animate = false;
-			}
+				if (animate)
+				{
+					rotation += (1.0f * rotation) + 0.05f;
+					models[m_player] = rotate(models[m_player], 0.01f, animation); // Rotate
+					rotation = 0.0f;
+					animate = false;
+				}
 		}
-		update();
-		render();
-		jump();
 
-		//models[1] = glm::translate(models[1], glm::vec3(0, 0, 0.1));
-		game_object[1]->setPosition(game_object[1]->getPosition() + glm::vec3(0, 0, 0.01));
-
-		if (game_object[1]->getPosition().z > 11)
+		if (gameOver == false)
 		{
-			game_object[1]->setPosition(glm::vec3(0, 0, -15));
+			update();
+			jump();
+
+			//models[1] = glm::translate(models[1], glm::vec3(0, 0, 0.1));
+			game_object[1]->setPosition(game_object[1]->getPosition() + glm::vec3(0, 0, 0.01));
+
+			if (game_object[1]->getPosition().z > 11)
+			{
+				score++;
+				hud = "Score : " + string(toString(score));
+
+				switch (rand() % 2 + 1)
+				{
+				case 1:
+				{
+					game_object[1]->setPosition(glm::vec3(0, 0, -15));
+					break;
+				}
+				case 2:
+				{
+					game_object[1]->setPosition(glm::vec3(0, 2, -15));
+					break;
+				}
+				default:
+				{
+					break;
+				}
+				}
+			}
+
+			
 		}
-
-
+			if (gameOver == true)
+			{
+				hud = "Score : " + string(toString(score) + "\n" + "GameOver");
+				text.setString(hud);
+			}
+		
+		
+		render();
 	}
 
 #if (DEBUG >= 2)
@@ -438,22 +467,13 @@ void Game::render()
 	// https://www.sfml-dev.org/documentation/2.0/classsf_1_1RenderTarget.php#a8d1998464ccc54e789aaf990242b47f7
 	window.pushGLStates();
 
-	//// Find mouse position using sf::Mouse
-	//int x = Mouse::getPosition(window).x;
-	//int y = Mouse::getPosition(window).y;
+	text.setString(hud);
+	text.setFont(font);
 
-	//string hud = "Heads Up Display ["
-	//	+ string(toString(x))
-	//	+ "]["
-	//	+ string(toString(y))
-	//	+ "]";
+	text.setFillColor(sf::Color(255, 255, 255, 170));
+	text.setPosition(50.f, 50.f);
 
-	//Text text(hud, font);
-
-	//text.setFillColor(sf::Color(255, 255, 255, 170));
-	//text.setPosition(50.f, 50.f);
-
-	//window.draw(text);
+	window.draw(text);
 
 	// Restore OpenGL render states
 	// https://www.sfml-dev.org/documentation/2.0/classsf_1_1RenderTarget.php#a8d1998464ccc54e789aaf990242b47f7
@@ -603,9 +623,13 @@ void Game::collision()
 {
 	for (int i = 1; i < m_maxCube; i++)
 	{
-		if (game_object[m_player]->getPosition().z - 2 < game_object[i]->getPosition().z)
+		if (game_object[m_player]->getPosition().z - 2 < game_object[i]->getPosition().z &&
+			game_object[m_player]->getPosition().z  > game_object[i]->getPosition().z - 2 &&
+			game_object[m_player]->getPosition().y - 2 < game_object[i]->getPosition().y &&
+			game_object[m_player]->getPosition().y  > game_object[i]->getPosition().y - 2)
 		{
 			std::cout << "true collide" << std::endl;
+			gameOver = true;
 		}
 	}
 

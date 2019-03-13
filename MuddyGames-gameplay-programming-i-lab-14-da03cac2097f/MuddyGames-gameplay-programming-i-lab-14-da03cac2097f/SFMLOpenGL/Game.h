@@ -43,8 +43,16 @@ private:
 	RenderWindow window;
 	Clock clock;
 	Time time;
+
+	int score = 0;
+
 	bool animate = false;
 	bool allowJump = false;
+	bool gameOver = false;
+
+	string hud = ("Score : ");
+	Text text;
+
 	vec3 animation = vec3(0.0f);
 	float rotation = 0.0f;
 	bool isRunning = false;
